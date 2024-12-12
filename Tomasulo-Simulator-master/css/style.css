@@ -1,0 +1,272 @@
+/* General Body Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Container for the main layout */
+.top-wrap {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Center column (middle content) */
+.center-wrap {
+    flex: 1;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Control buttons */
+.pane-control {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.pane-control button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pane-control button:hover {
+    background-color: #0056b3;
+}
+
+/* Reservation Pane Styling */
+.pane-reservation {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.explain {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list li {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+}
+
+.station.title {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.station span {
+    text-align: center;
+    padding: 8px;
+}
+
+.station .name, .station .time-remaining, .station .instruction-number,
+.station .state, .station .p1, .station .p2, .station .p3 {
+    text-align: center;
+}
+
+/* Right Pane Styling */
+.right-wrap {
+    flex-basis: 35%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Instruction Pane Styling */
+.pane-instruction {
+    margin-bottom: 20px;
+}
+
+.pane-instruction .explain {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+/* List inside the instruction pane */
+#instruction-show {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#instruction-show li {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+}
+
+#instruction-show .instruction.title {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+#instruction-show .instruction span {
+    text-align: center;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    .top-wrap {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .center-wrap, .right-wrap {
+        width: 100%;
+    }
+
+    .pane-control {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .list li {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+.bottom-wrap {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Title for Memory Section */
+.explain {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+/* Memory Pane Styling */
+.pane-memory {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping if the container is too narrow */
+    gap: 15px;         /* Adds space between blocks */
+    padding: 10px;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-x: auto; /* Allows horizontal scrolling if the content overflows */
+    justify-content: flex-start; /* Aligns memory blocks to the left */
+}
+
+/* Memory Block Styling */
+.memory {
+    background-color: #e0f7fa;
+    border: 1px solid #4fc3f7;
+    border-radius: 8px;
+    width: 80px;
+    height: 60px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 0.9rem;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Hover effect for memory blocks */
+.memory:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for Memory Block Address and Value */
+.memory .addr {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.memory .value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #00796b;
+}
+
+/* Ensure that blocks fit properly inside the container */
+#memory-show {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+    width: 100%;
+}
+
+/* Responsive Design for Small Screens */
+@media (max-width: 768px) {
+    .bottom-wrap {
+        padding: 15px;
+    }
+
+    .pane-memory {
+        gap: 10px;
+        justify-content: flex-start; /* Align memory blocks to the left */
+    }
+
+    .memory {
+        width: 70px;
+        height: 50px;
+    }
+}
