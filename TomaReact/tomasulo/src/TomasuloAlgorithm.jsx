@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import './css/style.css';
-import { initGUI, update, init } from './js/main.js';
+import React, { useState, useEffect } from "react";
+import "./css/style.css";
+import { initGUI, update, init } from "./js/main.js";
 
 const TomasuloAlgorithm = () => {
-  const [program, setProgram] = useState('ld F6, 105\nld f2, 101\nmuld f0, f2, f4\nsubd f8, f6, f2\ndivd f10, f0, f6\naddd f6, f8, f2');
+  const [program, setProgram] = useState(
+    "ld F6, 105\nld f2, 101\nmuld f0, f2, f4\nsubd f8, f6, f2\ndivd f10, f0, f6\naddd f6, f8, f2"
+  );
   const [main, setMain] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDialog2Open, setDialog2Open] = useState(false);
@@ -13,6 +15,7 @@ const TomasuloAlgorithm = () => {
 
   useEffect(() => {
     const mainInstance = init(program);
+    
     setMain(mainInstance);
     initGUI(mainInstance, editMemory);
     update(mainInstance);
@@ -59,7 +62,10 @@ const TomasuloAlgorithm = () => {
   };
 
   const handleMultiStep = () => {
-    const steps = parseInt(prompt("Please enter the number of running steps"), 10);
+    const steps = parseInt(
+      prompt("Please enter the number of running steps"),
+      10
+    );
     for (let i = 0; i < steps; i++) {
       main.step();
     }
@@ -86,31 +92,48 @@ const TomasuloAlgorithm = () => {
   };
 
   const editMemory = (addr) => {
-    setMemAddr(addr);
-    setMemVal(main.system.memory.data[addr]);
-    setDialog2Open(true);
+    
+      setMemAddr(addr);
+      setMemVal(main?.system?.memory?.data[addr]);
+      setDialog2Open(true);
+    
   };
 
   return (
     <div>
       {isDialogOpen && (
         <div id="dialog" title="instruction-edit">
-          <textarea id="inst-edit-input" value={program} onChange={(e) => setProgram(e.target.value)}></textarea>
-          <button id="inst-submit" onClick={handleInstSubmit}>confirm</button>
+          <textarea
+            id="inst-edit-input"
+            value={program}
+            onChange={(e) => setProgram(e.target.value)}
+          ></textarea>
+          <button id="inst-submit" onClick={handleInstSubmit}>
+            confirm
+          </button>
         </div>
       )}
       {isDialog2Open && (
         <div id="dialog2" title="memory-edit">
           <input id="mem-addr" type="text" value={memAddr} disabled />
-          <input id="mem-val" type="text" value={memVal} onChange={(e) => setMemVal(e.target.value)} />
-          <button id="mem-submit" onClick={handleMemSubmit}>Revise</button>
+          <input
+            id="mem-val"
+            type="text"
+            value={memVal}
+            onChange={(e) => setMemVal(e.target.value)}
+          />
+          <button id="mem-submit" onClick={handleMemSubmit}>
+            Revise
+          </button>
         </div>
       )}
 
       <div className="page-wrap">
         <div className="left-wrap">
           <div className="pane-clock">
-            <span id="global-clock" className="clock">0</span>
+            <span id="global-clock" className="clock">
+              0
+            </span>
           </div>
           <div className="pane-registers">
             <div className="explain">Register File</div>
@@ -126,12 +149,24 @@ const TomasuloAlgorithm = () => {
         <div className="top-wrap">
           <div className="center-wrap">
             <div className="pane-control">
-              <button id="action-step" onClick={handleStep}>Step</button>
-              <button id="action-restart" onClick={handleRestart}>Restart</button>
-              <button id="action-end" onClick={handleEnd}>End</button>
-              <button id="action-run" onClick={handleRun}>Run</button>
-              <button id="action-stop" onClick={handleStop}>Stop</button>
-              <button id="action-multistep" onClick={handleMultiStep}>Multi Step</button>
+              <button id="action-step" onClick={handleStep}>
+                Step
+              </button>
+              <button id="action-restart" onClick={handleRestart}>
+                Restart
+              </button>
+              <button id="action-end" onClick={handleEnd}>
+                End
+              </button>
+              <button id="action-run" onClick={handleRun}>
+                Run
+              </button>
+              <button id="action-stop" onClick={handleStop}>
+                Stop
+              </button>
+              <button id="action-multistep" onClick={handleMultiStep}>
+                Multi Step
+              </button>
             </div>
 
             <div className="pane-reservation">
@@ -140,7 +175,9 @@ const TomasuloAlgorithm = () => {
                 <li className="station title">
                   <span className="name">Name</span>
                   <span className="time-remaining">Time Left</span>
-                  <span className="instruction-number">Command Line Number</span>
+                  <span className="instruction-number">
+                    Command Line Number
+                  </span>
                   <span className="state">State</span>
                   <span className="p1">Output</span>
                   <span className="p2">Enter 1</span>
@@ -155,7 +192,13 @@ const TomasuloAlgorithm = () => {
               <div className="explain">
                 Command Queue <span id="total-inst"></span>
                 <span className="right">
-                  <a href="#" id="action-inst-edit" onClick={handleInstEdit}><i className="icon-edit"></i>Edit</a>
+                  <button
+                    id="action-inst-edit"
+                    onClick={handleInstEdit}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <i className="icon-edit"></i> Edit
+                  </button>
                 </span>
               </div>
               <ol id="instruction-show" className="list">
@@ -175,7 +218,7 @@ const TomasuloAlgorithm = () => {
         <div className="bottom-wrap">
           <div className="explain">Memory</div>
           <div className="pane-memory">
-            <div id="memory-show">
+            <div id="memory-show" onClick={editMemory}>
               {/* Memory blocks will be inserted here dynamically */}
             </div>
           </div>
