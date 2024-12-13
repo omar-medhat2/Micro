@@ -296,6 +296,19 @@ const TomasuloAlgorithm = () => {
         </div>
 
         <div className="bottom-wrap">
+          <div className="explain">Cache</div>
+          <div className="pane-cache">
+            <div id="cache-display">
+              {/* Cache entries will be inserted here dynamically */}
+            </div>
+            <div id="cache-status">
+              {/* Cache hit/miss status will be displayed here */}
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div className="bottom-wrap">
           <div className="explain">Memory</div>
           <div className="pane-memory">
             <div id="memory-show" onClick={editMemory}>
@@ -303,7 +316,8 @@ const TomasuloAlgorithm = () => {
             </div>
           </div>
         </div>
-      </div>
+
+        
 
       <div id="cur-pc">Program Counter: 0</div>
     </div>

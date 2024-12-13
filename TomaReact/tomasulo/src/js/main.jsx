@@ -1,3 +1,6 @@
+import Cache from "./Cache.js";
+
+
 function Buffer(_, memory) {
   ReservationStation.apply(this, arguments);
   this.memory = memory;
@@ -322,8 +325,10 @@ Main.prototype.run = function () {
 
 function init(program, options) {
   const { loadLatency, multiplyLatency, addLatency, stationConfig } = options;
+ 
   const System = {};
 
+  System.cache = new Cache(2);
   System.memory = new Memory(4096);
   System.registerFile = new RegisterFile(11, "F");
   System.commonDataBus = new CommonDataBus();
@@ -339,11 +344,9 @@ function init(program, options) {
   addStations("MUL", stationConfig.MUL || 2, "ReservationStation");
   addStations("LOAD", stationConfig.LOAD || 2, "Buffer", System.memory);
 
-
   const Stations = (prefix) =>
     Object.keys(System.reservationStations).filter((name) => name.startsWith(prefix)).map((name) => System.reservationStations[name]);
   System.instructionTypes = {
-    
     ADDD: new InstructionType(
       "ADDD",
       addLatency || 2,
@@ -358,7 +361,6 @@ function init(program, options) {
       },
       Stations("ADD")
     ),
-
     SUBD: new InstructionType(
       "SUBD",
       addLatency || 2,
@@ -373,7 +375,6 @@ function init(program, options) {
       },
       Stations("ADD")
     ),
-
     MULD: new InstructionType(
       "MULD",
       multiplyLatency || 2,
@@ -388,7 +389,6 @@ function init(program, options) {
       },
       Stations("MUL")
     ),
-
     DIVD: new InstructionType(
       "DIVD",
       multiplyLatency || 2,
@@ -403,7 +403,6 @@ function init(program, options) {
       },
       Stations("MUL")
     ),
-
     LD: new InstructionType(
       "LD",
       loadLatency || 2,
@@ -412,12 +411,18 @@ function init(program, options) {
         InstructionType.PARAMETER_TYPE_REGISTER,
         InstructionType.PARAMETER_TYPE_ADDRESS,
       ],
-      function (p) {
-        return this.memory.load(p[1]);
+      (p) => {
+        const cacheResult = System.cache.access(p[1]);
+        if (cacheResult.hit) {
+          return cacheResult.value;
+        } else {
+          const value = System.memory.load(p[1]);
+          System.cache.update(p[1], value);
+          return value;
+        }
       },
       Stations("LOAD")
     ),
-
     ST: new InstructionType(
       "ST",
       loadLatency || 2,
@@ -427,7 +432,7 @@ function init(program, options) {
         InstructionType.PARAMETER_TYPE_ADDRESS,
       ],
       function (p) {
-        this.memory.store(p[1], p[0]);
+        this.system.memory.store(p[1], p[0]);
         return p[0];
       },
       Stations("LOAD")
@@ -576,6 +581,20 @@ function update(main) {
     document.getElementById("m" + i).children[1].innerText =
       main.system.memory.data[i];
   }
+
+  // Update cache display
+  const cacheDisplay = document.getElementById("cache-display");
+  const cacheEntries = main.system.cache.getCache();
+  cacheDisplay.innerHTML = cacheEntries
+    .map(
+      ([address, value]) =>
+        `<div class="cache-entry">Address: ${address}, Value: ${value}</div>`
+    )
+    .join("");
+
+  // Update cache hit/miss status
+  const cacheStatus = document.getElementById("cache-status");
+  cacheStatus.innerText = main.system.cache.lastAccessStatus || "";
 }
 
 export { initGUI, update, init };
