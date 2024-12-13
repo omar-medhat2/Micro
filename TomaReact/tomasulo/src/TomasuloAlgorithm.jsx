@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./css/style.css";
-import { initGUI, update, init } from "./js/main.js";
+import { initGUI, update, init } from "./js/main.jsx";
 
 const TomasuloAlgorithm = () => {
   const [program, setProgram] = useState(
-    "ld F6, 105\nld f2, 101\nmuld f0, f2, f4\nsubd f8, f6, f2\ndivd f10, f0, f6\naddd f6, f8, f2"
+    "ld F6, 105\nld f2, 101\nmuld f0, f2, f4\nsubd f8, f6, f2\ndivd f10, f0, f6\naddd f6, f8, f2\naddd f10, f5, f6"
   );
   const [main, setMain] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -12,14 +12,27 @@ const TomasuloAlgorithm = () => {
   const [memAddr, setMemAddr] = useState(1);
   const [memVal, setMemVal] = useState(12);
   const [intervalId, setIntervalId] = useState(null);
-
+  const [loadLatency, setLoadLatency] = useState(0);
+  const [multiplyLatency, setMultiplyLatency] = useState(0);
+  const [addLatency, setAddLatency] = useState(0);
+  const [numAddStations, setNumAddStations] = useState(3);
+  const [numMulStations, setNumMulStations] = useState(2);
+  const [numLoadStations, setNumLoadStations] = useState(3);
   useEffect(() => {
-    const mainInstance = init(program);
+    const mainInstance = init(program, {
+      loadLatency,
+      multiplyLatency,
+      addLatency,
+     stationConfig: {
+      ADD: numAddStations,
+      MUL: numMulStations,
+      LOAD: numLoadStations,
+    },});
     
     setMain(mainInstance);
     initGUI(mainInstance, editMemory);
     update(mainInstance);
-  }, [program]);
+  }, [program, loadLatency, multiplyLatency, addLatency,numAddStations, numMulStations, numLoadStations]);
 
   useEffect(() => {
     if (main) {
@@ -55,9 +68,17 @@ const TomasuloAlgorithm = () => {
 
   const handleRestart = () => {
     clearInterval(intervalId);
-    const mainInstance = init(program);
+    const mainInstance = init(program, {
+      loadLatency,
+      multiplyLatency,
+      addLatency,
+      stationConfig: {
+        ADD: numAddStations,
+        MUL: numMulStations,
+        LOAD: numLoadStations,
+      },
+    });
     setMain(mainInstance);
-    initGUI(mainInstance, editMemory);
     update(mainInstance);
   };
 
@@ -145,6 +166,65 @@ const TomasuloAlgorithm = () => {
             </div>
           </div>
         </div>
+
+      <div className="latency-inputs">
+        <div>
+          <label htmlFor="load-latency">Load Latency:</label>
+          <input
+            id="load-latency"
+            type="number"
+            value={loadLatency}
+            onChange={(e) => setLoadLatency(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <label htmlFor="multiply-latency">Multiply Latency:</label>
+          <input
+            id="multiply-latency"
+            type="number"
+            value={multiplyLatency}
+            onChange={(e) => setMultiplyLatency(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <label htmlFor="add-latency">Add/Subtract Latency:</label>
+          <input
+            id="add-latency"
+            type="number"
+            value={addLatency}
+            onChange={(e) => setAddLatency(Number(e.target.value))}
+          />
+        </div>
+      </div>
+      <div className="station-inputs">
+        <div>
+          <label htmlFor="add-stations">Number of ADD Stations:</label>
+          <input
+            id="add-stations"
+            type="number"
+            value={numAddStations}
+            onChange={(e) => setNumAddStations(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <label htmlFor="mul-stations">Number of MUL Stations:</label>
+          <input
+            id="mul-stations"
+            type="number"
+            value={numMulStations}
+            onChange={(e) => setNumMulStations(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <label htmlFor="load-stations">Number of LOAD Buffers:</label>
+          <input
+            id="load-stations"
+            type="number"
+            value={numLoadStations}
+            onChange={(e) => setNumLoadStations(Number(e.target.value))}
+          />
+        </div>
+      </div>
 
         <div className="top-wrap">
           <div className="center-wrap">
