@@ -18,21 +18,25 @@ const TomasuloAlgorithm = () => {
   const [numAddStations, setNumAddStations] = useState(3);
   const [numMulStations, setNumMulStations] = useState(2);
   const [numLoadStations, setNumLoadStations] = useState(3);
+  const [cacheMissPenalty, setCacheMissPenalty] = useState(5); // Cache miss penalty
+
   useEffect(() => {
-    const mainInstance = init(program, {
+    const options = {
       loadLatency,
       multiplyLatency,
       addLatency,
-     stationConfig: {
-      ADD: numAddStations,
-      MUL: numMulStations,
-      LOAD: numLoadStations,
-    },});
-    
+      stationConfig: {
+        ADD: numAddStations,
+        MUL: numMulStations,
+        LOAD: numLoadStations,
+      },
+      cacheMissPenalty, // Pass cache miss penalty to options
+    };
+    const mainInstance = init(program, options);
     setMain(mainInstance);
     initGUI(mainInstance, editMemory);
     update(mainInstance);
-  }, [program, loadLatency, multiplyLatency, addLatency,numAddStations, numMulStations, numLoadStations]);
+  }, [program, loadLatency, multiplyLatency, addLatency, numAddStations, numMulStations, numLoadStations, cacheMissPenalty]);
 
   useEffect(() => {
     if (main) {
@@ -77,6 +81,7 @@ const TomasuloAlgorithm = () => {
         MUL: numMulStations,
         LOAD: numLoadStations,
       },
+      cacheMissPenalty, // Pass cache miss penalty to options
     });
     setMain(mainInstance);
     update(mainInstance);
@@ -193,6 +198,15 @@ const TomasuloAlgorithm = () => {
             type="number"
             value={addLatency}
             onChange={(e) => setAddLatency(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <label htmlFor="cache-miss-penalty">Cache Miss Penalty:</label>
+          <input
+            id="cache-miss-penalty"
+            type="number"
+            value={cacheMissPenalty}
+            onChange={(e) => setCacheMissPenalty(Number(e.target.value))}
           />
         </div>
       </div>

@@ -324,11 +324,11 @@ Main.prototype.run = function () {
 };
 
 function init(program, options) {
-  const { loadLatency, multiplyLatency, addLatency, stationConfig } = options;
- 
+  const { loadLatency, multiplyLatency, addLatency, stationConfig, cacheMissPenalty } = options;
+  const cache = new Cache(5, cacheMissPenalty || 5); // Example cache size and miss penalty
   const System = {};
 
-  System.cache = new Cache(2);
+  System.cache = cache;
   System.memory = new Memory(4096);
   System.registerFile = new RegisterFile(11, "F");
   System.commonDataBus = new CommonDataBus();
@@ -421,7 +421,13 @@ function init(program, options) {
           return value;
         }
       },
-      Stations("LOAD")
+      Stations("LOAD"),
+      (instruction) => {
+        const cacheResult = System.cache.access(instruction.parameters[1]);
+        const totalLatency = loadLatency + (cacheResult.hit ? 0 : cacheMissPenalty);
+        console.log(`Instruction ${instruction.id} execution time: ${totalLatency}`);
+        return totalLatency;
+      }
     ),
     ST: new InstructionType(
       "ST",
@@ -432,7 +438,7 @@ function init(program, options) {
         InstructionType.PARAMETER_TYPE_ADDRESS,
       ],
       function (p) {
-        this.system.memory.store(p[1], p[0]);
+        System.memory.store(p[1], p[0]);
         return p[0];
       },
       Stations("LOAD")
