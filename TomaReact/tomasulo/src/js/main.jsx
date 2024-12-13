@@ -76,7 +76,8 @@ function Memory(size) {
   this.data = new Array(size);
   this.size = size;
   for (var i = 0; i < this.data.length; ++i) {
-    this.data[i] = i;
+    let random_val = Math.floor(Math.random() * 100) + 1;
+    this.data[i] = random_val;
   }
 }
 
@@ -329,7 +330,7 @@ function init(program, options) {
   const System = {};
 
   System.cache = cache;
-  System.memory = new Memory(4096);
+  System.memory = new Memory(20);
   System.registerFile = new RegisterFile(11, "F");
   System.commonDataBus = new CommonDataBus();
   System.reservationStations = {};

@@ -4,7 +4,7 @@ import { initGUI, update, init } from "./js/main.jsx";
 
 const TomasuloAlgorithm = () => {
   const [program, setProgram] = useState(
-    "ld F6, 105\nld f2, 101\nmuld f0, f2, f4\nsubd f8, f6, f2\ndivd f10, f0, f6\naddd f6, f8, f2\naddd f10, f5, f6"
+    "ld F6, 10\nld f2, 11\nmuld f0, f2, f4\nsubd f8, f6, f2\ndivd f10, f0, f6\naddd f6, f8, f2\naddd f10, f5, f6"
   );
   const [main, setMain] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
