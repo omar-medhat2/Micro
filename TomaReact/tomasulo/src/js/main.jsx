@@ -1,5 +1,8 @@
 import Cache from "./Cache.js";
-
+import Memory from "./Memory.js";
+import Instruction from "./Instruction.js";
+import InstructionType from "./InstructionType.js";
+import RegisterFile from "./RegisterFile.js";
 
 function Buffer(_, memory) {
   ReservationStation.apply(this, arguments);
@@ -44,96 +47,10 @@ CommonDataBus.prototype.clearResult = function () {
   this._result = {};
 };
 
-function RegisterFile(count, prefix) {
-  this.registers = new Array(count);
-  for (var i = 0; i < this.registers.length; ++i) {
-    this.registers[i] = 1;
-  }
-  this.count = count;
-  this.prefix = prefix.toUpperCase();
-}
 
-RegisterFile.prototype._getIndex = function (name) {
-  name = name.toUpperCase();
-  if (name.substring(0, this.prefix.length) === this.prefix) {
-    var index = parseInt(name.substring(this.prefix.length), 10);
-    if (index >= 0 && index < this.count) {
-      return index;
-    }
-  }
-  throw new Error('[REGISTER_FILE] Invalid register "' + name + '"');
-};
 
-RegisterFile.prototype.get = function (name) {
-  return this.registers[this._getIndex(name)];
-};
 
-RegisterFile.prototype.set = function (name, value) {
-  this.registers[this._getIndex(name)] = value;
-};
 
-function Memory(size) {
-  this.data = new Array(size);
-  this.size = size;
-  for (var i = 0; i < this.data.length; ++i) {
-    let random_val = Math.floor(Math.random() * 100) + 1;
-    this.data[i] = random_val;
-  }
-}
-
-Memory.prototype._check_addr = function (addr) {
-  if (addr >= this.size || addr < 0) {
-    throw new Error('[MEMORY] Invalid address "' + addr + '"');
-  }
-};
-
-Memory.prototype.load = function (addr) {
-  this._check_addr(addr);
-  return this.data[addr];
-};
-
-Memory.prototype.store = function (addr, value) {
-  this._check_addr(addr);
-  this.data[addr] = value;
-};
-
-var id = 0;
-
-function Instruction(type, parameters) {
-  this.id = ++id;
-  this.type = type;
-  this.time = type.cycles;
-  this.parameters = parameters;
-  this.issueTime = -1;
-  this.executeTime = -1;
-  this.writeBackTime = -1;
-}
-Instruction.resetID = function () {
-  id = 0;
-};
-
-function InstructionType(
-  name,
-  cycles,
-  destParameter,
-  parameters,
-  calculate,
-  stations
-) {
-  this.name = name;
-  this.cycles = cycles;
-  this.parameters = parameters;
-  this.destParameter = destParameter;
-  this.calculate = calculate;
-  this.stations = stations;
-}
-
-InstructionType.PARAMETER_TYPE_REGISTER = 0;
-InstructionType.PARAMETER_TYPE_ADDRESS = 1;
-
-if (typeof module !== "object") {
-  this.InstructionType = InstructionType;
-}
 
 function ReservationStation(name) {
   this.name = name;
@@ -182,6 +99,12 @@ function Main(program, system) {
   this.instructions = instructions;
   this.issuedInstructions = 0;
 }
+
+Main.prototype.run = function () {
+  while (!this.step()) {
+    // ...
+  }
+};
 
 Main.prototype.step = function () {
   ++this.system.clock;
@@ -318,11 +241,7 @@ Main.prototype.step = function () {
   return allDone;
 };
 
-Main.prototype.run = function () {
-  while (!this.step()) {
-    // ...
-  }
-};
+
 
 function init(program, options) {
   const { loadLatency, multiplyLatency, addLatency, stationConfig, cacheMissPenalty } = options;

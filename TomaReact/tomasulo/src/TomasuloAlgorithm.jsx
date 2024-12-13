@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./css/style.css";
 import { initGUI, update, init } from "./js/main.jsx";
+import CDB from "./js/CDB";
+import ReservationStation from "./js/ReservationStation";
+import Memory from "./js/Memory.js/index.js";
+import RegisterFile from "./js/RegisterFile";
+import { Cache } from "./js/Cache";
+import { Instruction } from "./js/InstructionType.js";
+import {LoadBuffer} from "./js/LoadBuffer";
+
 
 const TomasuloAlgorithm = () => {
   const [program, setProgram] = useState(
